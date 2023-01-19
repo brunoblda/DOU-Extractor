@@ -1,4 +1,4 @@
-@ECHO OFF 
+::@ECHO OFF 
 :: %1 = pasta para salvar
 
 For /f "tokens=1-6 delims=/: " %%A in ('robocopy "|" . /njh ^| find ":"') do  (
@@ -9,20 +9,29 @@ For /f "tokens=1-6 delims=/: " %%A in ('robocopy "|" . /njh ^| find ":"') do  (
 set yearToday=%_YYYY%
 set monthToday=%_month%
 set dayToday=%_day%
-set count=0
+set a/ count=0
 
 set downloadFileName=IN-Jornal-%yearToday%_%monthToday%_%dayToday%_do2.pdf
 set fileResult=%1%downloadFileName%
 ECHO %fileResult%
 
-for /r %%i in (%1) do (
-  set fileName=%%i
-  set yearFile=%fileName~10,4%
-  set monthFile=%fileName~15,2%
-  set dayFile=%fileName~18,2%
-  if (%yearFile%==%yearToday%) count+=1   
+FOR /R %1 %%F in (*.pdf*) do (
+  set fileName=%%F
+  set yearFile=2023
+  set monthFile=01
+  set dayFile=16
+  if %yearFile%==%yearToday% (
+    if %monthFile%==%monthToday% (
+      if %dayFile%==%dayToday% (
+        ECHO %%count%%))) 
 )
-set downloadFileName=IN-Jornal-%yearToday%_%monthToday%_%dayToday%_do2.pdf
-set fileResult=%1%downloadFileName%
-ECHO %fileResult%
-::if count==0 curl http://diariooficialhoje.com.br/IN-Jornal-2023_01_16_do2.pdf --output %1
+
+:: if count==0 curl http://diariooficialhoje.com.br/IN-Jornal-2023_01_17_do2.pdf --output %1
+
+:: if count GTR 0 curl http://diariooficialhoje.com.br/IN-Jornal-2023_01_16_do2.pdf -O
+
+:: if count GTR 0 curl http://diariooficialhoje.com.br/IN-Jornal-2023_01_16_do2.pdf --output %1
+
+if count EQU 0 curl -O --output-dir %1 http://diariooficialhoje.com.br/IN-Jornal-2023_01_16_do2.pdf
+
+:: curl http://diariooficialhoje.com.br/IN-Jornal-2023_01_16_do2.pdf -O
